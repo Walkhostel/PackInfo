@@ -6,15 +6,15 @@ ABOUT:
 
 
 INSTALLATION                                                                                                                                                                                                                                                                                                
-        From Cargo (crates.io):
-                cargo install packinfo
-        From source:
-                git clone https://github.com/твойник/packinfo
-                cd packinfo
-                cargo install --path
+        From Cargo (crates.io):                                                                                                                                                                                                                                                                                
+                cargo install packinfo                                                                                                                                                                                                                                                                        
+        From source:                                                                                                                                                                                                                                                                                                                        
+                git clone https://github.com/твойник/packinfo                                                                                                                                                                                                                                                        
+                cd packinfo                                                                                                                                                                                                                                                                                
+                cargo install --path                                                                                                                                                                                                                                                                        
 
 
 
 HOW TO USE                                                                                                                                                                                                                                                                                                
-        "packinfo" for full list
+        "packinfo" for full list                                                                                                                                                                                                                                                                                        
         "packinfo [package name]" for info about specific package
