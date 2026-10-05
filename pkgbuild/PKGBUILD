@@ -12,7 +12,7 @@ sha256sums=('SKIP')
 
 prepare() {
     cd "$pkgname"
-    cargo fetch --locked
+    cargo fetch
 }
 
 build() {
