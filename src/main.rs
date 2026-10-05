@@ -36,10 +36,26 @@ fn load() -> Result<Vec<Package>> {
 
 fn split_deps(s: &str) -> Vec<String> {
     s.split(", ")
-        .map(|d| d.split(['>', '<', '=']).next().unwrap().trim().to_string())
+        .map(|d| d.trim().to_string())
         .filter(|d| !d.is_empty())
         .collect()
 }
+
+fn render_deps(title: &str, deps: &[String]) {
+    println!("\n{title} ({}):", deps.len());
+    if deps.is_empty() {
+        println!("  empty");
+        return;
+    }
+    let mut t = Table::new();
+    t.load_preset(UTF8_FULL);
+    t.set_header(["dep"]);
+    for d in deps {
+        t.add_row([d]);
+    }
+    println!("{t}");
+}
+
 
 fn main() -> Result<()> {
     let pkgs = load()?;
@@ -47,21 +63,28 @@ fn main() -> Result<()> {
     match arg.as_deref() {
         None => {
             let mut t = Table::new();
-            t.set_header(["name", "desc"]);           // вместо load_preset
+            t.load_preset(UTF8_FULL);
+            t.set_content_arrangement(comfy_table::ContentArrangement::Dynamic);
+            t.set_header(["name", "desc", "depends"]);
             for p in &pkgs {
-                t.add_row([&p.name, &p.description]);
+                t.add_row([&p.name, &p.description, &p.depends.join(", ")]);
             }
             println!("{t}");
         }
         Some("--json") => println!("{}", serde_json::to_string_pretty(&pkgs)?),
+        Some("--deps") => {
+            for p in &pkgs {
+                println!("{} ({}):", p.name, p.depends.len());
+                for d in &p.depends { println!("  {d}"); }
+            }
+        }
         Some(name) => {
             if let Some(p) = pkgs.iter().find(|p| p.name == name) {
-                println!("name:     {}", p.name);
-                println!("desc:     {}", p.description);
-                println!("depends:  {}", p.depends.join(", "));
-                println!("req by:   {}", p.required_by.join(", "));
+                println!("name:     {}\ndesc:     {}", p.name, p.description);
+                render_deps("depends", &p.depends);
+                render_deps("required by", &p.required_by);
             } else {
-                eprintln!("пакет {name} не найден");
+                eprintln!("package {name} not found");
             }
         }
     }
