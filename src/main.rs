@@ -84,13 +84,21 @@ fn main() -> Result<()> {
         }
         Some(name) => {
             if let Some(p) = pkgs.iter().find(|p| p.name == name) {
-                println!("name:     {}\ndesc:     {}", p.name, p.description);
-                render_deps("depends", &p.depends);
-                render_deps("required by", &p.required_by);
+                let mut t = Table::new();
+                t.load_preset(UTF8_FULL);
+                t.set_content_arrangement(comfy_table::ContentArrangement::Dynamic);
+                t.set_header(["name", "desc", "depends", "required by"]);
+                t.column_mut(0).unwrap()
+                    .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(20)));
+                t.column_mut(3).unwrap()
+                    .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(25)));
+                t.add_row([&p.name, &p.description, &p.depends.join(", "), &p.required_by.join(", ")]);
+                println!("{t}");
             } else {
                 eprintln!("package {name} not found");
-            }
+            }       
         }
+
     }
 
     Ok(())
