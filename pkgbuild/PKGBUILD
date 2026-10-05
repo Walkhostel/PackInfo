@@ -1,4 +1,4 @@
-pkgname=packinfo
+pkgname=Packinfo
 pkgver=1.0.0
 pkgrel=1
 pkgdesc="Show all info about all installed packages due pacman"
