@@ -29,3 +29,4 @@ cargo install --path .
 - `packinfo -D` for name, required by and depends
 - `packinfo -d` for name, required by and description
 - `packinfo -Dd` or `packinfo -dD` for name, required by, description and depends
+- `packinfo --json` json output
