@@ -1,7 +1,10 @@
 [package]
 name = "packinfo"
 version = "1.0.0"
-edition = "2024"
+edition = "2021"
+description = "show installed arch packages with dependencies info"
+license = "GPL-3.0"
+repository = "https://github.com/Walkhostel/packinfo"
 
 [dependencies]
 anyhow = "1.0.104"
