@@ -64,6 +64,18 @@ fn main() -> Result<()> {
     let show_desc = args.iter().any(|a| a.contains('d') && a.starts_with('-'));
     let show_deps = args.iter().any(|a| a.contains('D') && a.starts_with('-'));
     let name_filter = args.iter().find(|a| !a.starts_with('-'));
+    if args.iter().any(|a| a == "--help" || a == "-h") {
+    println!("packinfo - show installed packages info
+
+usage:
+    packinfo for name and required by
+    packinfo [package name] for info about a specific package
+    packinfo -D for name, required by and depends
+    packinfo -d for name, required by and description
+    packinfo -Dd or packinfo -dD for name, required by, description and depends
+    packinfo --json       json output");
+    return Ok(());
+} 
 
     let filtered: Vec<&Package> = match name_filter {
         Some(name) => pkgs.iter().filter(|p| p.name == *name).collect(),
@@ -85,7 +97,7 @@ fn main() -> Result<()> {
     t.load_preset(UTF8_FULL);
 
     let mut headers = vec!["name", "required by"];
-    if show_desc { headers.push("desc"); }
+    if show_desc { headers.push("description"); }
     if show_deps { headers.push("depends"); }
     t.set_header(&headers);
 
