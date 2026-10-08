@@ -2,6 +2,7 @@ use comfy_table::{Table, presets::UTF8_FULL};
 use anyhow::Result;
 use serde::Serialize;
 use std::process::Command;
+use pager::Pager;
 
 #[derive(Serialize)]
 struct Package {
@@ -58,6 +59,7 @@ fn render_deps(title: &str, deps: &[String]) {
 
 
 fn main() -> Result<()> {
+    Pager::with_pager("less -RS").setup();
     let pkgs = load()?;
     let arg = std::env::args().nth(1);
     match arg.as_deref() {
