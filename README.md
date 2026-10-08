@@ -13,7 +13,7 @@ Packinfo can show info about all installed pacman packages in the system with th
 ```bash
 cargo install packinfo
 ```
-P.S. if command not found - add `~/.cargo/bin` to PATH
+P.S. if after installation you get "command not found"-add `~/.cargo/bin` to PATH
 
 ## How to use
 
