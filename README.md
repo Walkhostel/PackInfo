@@ -8,12 +8,10 @@ Packinfo can show info about all installed pacman packages in the system with th
 
 ## Installation
 
-### From source
+### From Cargo(rust)
 
 ```bash
-git clone https://github.com/Walkhostel/packinfo
-cd packinfo
-cargo install --path .
+cargo install packinfo
 ```
 
 ## How to use
