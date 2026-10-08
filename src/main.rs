@@ -57,51 +57,50 @@ fn render_deps(title: &str, deps: &[String]) {
     println!("{t}");
 }
 
-
 fn main() -> Result<()> {
-    Pager::with_pager("less -RS").setup();
     let pkgs = load()?;
-    let arg = std::env::args().nth(1);
-    match arg.as_deref() {
-        None => {
-            let mut t = Table::new();
-            t.load_preset(UTF8_FULL);
-            t.set_content_arrangement(comfy_table::ContentArrangement::Dynamic);
-            t.set_header(["name", "desc", "depends", "required by"]);
-            t.column_mut(0).unwrap()
-                .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(20)));
-            t.column_mut(3).unwrap()
-                .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(25)));
-            for p in &pkgs {
-                t.add_row([&p.name, &p.description, &p.depends.join(", "), &p.required_by.join(", ")]);
-            }
-            println!("{t}");
-        }
-        Some("--json") => println!("{}", serde_json::to_string_pretty(&pkgs)?),
-        Some("--deps") => {
-            for p in &pkgs {
-                println!("{} ({}):", p.name, p.depends.len());
-                for d in &p.depends { println!("  {d}"); }
-            }
-        }
-        Some(name) => {
-            if let Some(p) = pkgs.iter().find(|p| p.name == name) {
-                let mut t = Table::new();
-                t.load_preset(UTF8_FULL);
-                t.set_content_arrangement(comfy_table::ContentArrangement::Dynamic);
-                t.set_header(["name", "desc", "depends", "required by"]);
-                t.column_mut(0).unwrap()
-                    .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(20)));
-                t.column_mut(3).unwrap()
-                    .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(25)));
-                t.add_row([&p.name, &p.description, &p.depends.join(", "), &p.required_by.join(", ")]);
-                println!("{t}");
-            } else {
-                eprintln!("package {name} not found");
-            }       
-        }
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    
+    let show_desc = args.iter().any(|a| a.contains('d') && a.starts_with('-'));
+    let show_deps = args.iter().any(|a| a.contains('D') && a.starts_with('-'));
+    let name_filter = args.iter().find(|a| !a.starts_with('-'));
 
+    let filtered: Vec<&Package> = match name_filter {
+        Some(name) => pkgs.iter().filter(|p| p.name == *name).collect(),
+        None => pkgs.iter().collect(),
+    };
+
+    if filtered.is_empty() {
+        if let Some(name) = name_filter {
+            eprintln!("package {name} not found");
+        }
+        return Ok(());
     }
 
+    if filtered.len() > 1 {
+        Pager::with_pager("less -RS").setup();
+    }
+
+    let mut t = Table::new();
+    t.load_preset(UTF8_FULL);
+
+    let mut headers = vec!["name", "required by"];
+    if show_desc { headers.push("desc"); }
+    if show_deps { headers.push("depends"); }
+    t.set_header(&headers);
+
+    t.column_mut(0).unwrap()
+        .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(25)));
+    t.column_mut(1).unwrap()
+        .set_constraint(comfy_table::ColumnConstraint::UpperBoundary(comfy_table::Width::Fixed(30)));
+
+    for p in filtered {
+        let mut row = vec![p.name.clone(), p.required_by.join(", ")];
+        if show_desc { row.push(p.description.clone()); }
+        if show_deps { row.push(p.depends.join(", ")); }
+        t.add_row(row);
+    }
+
+    println!("{t}");
     Ok(())
 }
