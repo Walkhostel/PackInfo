@@ -8,12 +8,6 @@ Packinfo can show info about all installed pacman packages in the system with th
 
 ## Installation
 
-### From Cargo (crates.io)
-
-```bash
-cargo install packinfo
-```
-
 ### From source
 
 ```bash
