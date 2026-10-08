@@ -4,7 +4,7 @@
 
 Packinfo can show info about all installed pacman packages in the system with their name, description, dependencies, and what requires them, like this:
 
-<img width="459" height="53" alt="screenshot_2026-10-05_21-12-09" src="https://github.com/user-attachments/assets/7500e824-5ed3-44a4-a2c8-70247c4e0eed" />
+<img width="982" height="101" alt="screenshot_2026-10-08_21-46-35" src="https://github.com/user-attachments/assets/0c73801c-6bf2-4833-bcf3-438625eabfed" />
 
 ## Installation
 
