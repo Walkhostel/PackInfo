@@ -28,6 +28,4 @@ cargo install --path .
 - `packinfo [package name]` for info about a specific package
 - `packinfo -D` for name, required by and depends
 - `packinfo -d` for name, required by and description
-- `packinfo -Dd` for name, required by, description and depends
-- or
-- `packinfo -dD` for name, required by, description and depends
+- `packinfo -Dd` or `packinfo -dD` for name, required by, description and depends
